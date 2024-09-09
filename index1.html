@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins';
+            box-sizing: border-box;
+            transition: all 0.3s ease-in-out;
+        }
+        body 
+        {
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(81, 182, 255, 1) 0%, rgb(202, 226, 236) 100%);
+        }
+        .container 
+        {
+            display: flex;
+            align-items: center;
+        }
+        .weather-input 
+        {
+            width: 40%;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(81, 182, 255, 1) 0%, rgb(202, 226, 236) 100%);
+            padding: 1rem 2.5rem;
+            animation: slideInLeft 0.8s ease;
+        }
+        .input-group 
+        {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+            animation-delay: 0.5s;
+        }
+        .input-group input 
+        {
+            background: #f8f8f8;
+            text-transform: capitalize;
+            padding: 1rem;
+            font-size: 25px;
+            border-radius: 30px;
+            width: 100%;
+            outline: none;
+            border: none;      
+        }
+        .input-group .fa-search 
+        {
+            position: absolute;
+            right: 15px;
+            font-size: 22px;
+            color: #909090;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .input-group .fa-search:hover 
+        {
+            color: #000000;
+        }
+        .error 
+        {
+            display: none;
+            background: #ffcccc;
+            color: #ff0000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .error.show 
+        {
+            display: block;
+            opacity: 1;
+        }
+        .weather-output 
+        {
+            width: 60%;
+            position: fixed;
+            inset: 0;
+            margin-left: 40%;
+            padding: 2rem;
+            background-color: #f6f6f6;
+            overflow: auto;
+            animation: slideInRight 0.8s ease;
+        }
+        .heighlight 
+        {
+            display: grid;
+            grid-template-columns: repeat(3, 350px);
+            grid-auto-flow: row;
+            row-gap: 1rem;
+            column-gap: 10px;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+            animation-delay: 0.8s;
+        }
+        .forecast 
+        {
+            display: grid;
+            grid-template-columns: repeat(4, 260px);
+            grid-auto-flow: row;
+            row-gap: 1rem;
+            column-gap: 10px;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+            animation-delay: 1.1s;
+        }
+        .heighlight div, .forecast div 
+        {
+            height: 200px;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: rgb(81, 182, 255);
+            border-radius: 20px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .heighlight div:hover, .forecast div:hover 
+        {
+            transform: scale(1);
+        }
+        .heighlight i 
+        {
+            font-size: 45px;
+        }
+        .sun span 
+        {
+            align-items: center;
+            display: flex;
+            gap: 10px;
+        }
+        .weather 
+        {
+            display: none;
+        }
+        .weather-output 
+        {
+            border-radius: 50px;
+        }
+        .weather.show 
+        {
+            display: block;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        .weather-icon 
+        {
+            text-align: center;
+            margin: 2rem auto;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        .weather-icon img 
+        {
+            width: 150px;
+            height: 150px;
+        }
+        .weather-input .feelslike, .weather-input .description, .weather-input .date, .weather-input .city 
+        {
+            padding: 10px 0;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 0.5s;
+        }
+        .temperature 
+        {
+            font-size: 5rem;
+            text-align: center;
+            display: flex;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 0.5s;
+        }
+        @keyframes slideInLeft 
+        {
+            from 
+            {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to 
+            {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideInRight 
+        {
+            from 
+            {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to 
+            {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeIn 
+        {
+            from 
+            {
+                opacity: 0;
+            }
+            to 
+            {
+                opacity: 1;
+            }
+        }
+        @keyframes fadeOut 
+        {
+            from 
+            {
+                opacity: 1;
+            }
+            to 
+            {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="weather-input">
+            <div class="input-group">
+                <input type="text" id="userLocation" placeholder="Search For Places ...">
+                <i class="fa fa-search" onclick="findUserLocation()"></i>
+            </div>
+            <div class="error">
+                <p>Invalid City Name</p>
+            </div>
+            <div class="weather">
+                <div class="weather-icon"></div>
+                <h2 class="temperature"></h2>
+                <div class="feelslike"></div>
+                <div class="description"></div>
+                <hr>
+                <div class="date"></div>
+                <div class="city"></div>
+            </div>
+        </div>
+        <div class="weather-output">
+            <h2 class="heading">Today's Highlights</h2><br>
+            <div class="heighlight">
+                <div class="humidity">
+                    Humidity
+                    <i class="fa-solid fa-water"></i>
+                    <h1 id="HValue"></h1>
+                </div>
+                <div class="wind-speed">
+                    Wind Speed
+                    <i class="fa-solid fa-wind"></i>
+                    <h1 id="WValue"></h1>
+                </div>
+                <div class="sun">
+                    <span>
+                        <i class="fa-solid fa-sun"></i>
+                        <p><span id="SRValue">Sunrise</span></p>
+                    </span>
+                    <span>
+                        <i class="fa-regular fa-sun"></i>
+                        <p><span id="SSValue">Sunset</span></p>
+                    </span>
+                </div>
+                <div class="clouds">
+                    Clouds
+                    <i class="fa-solid fa-cloud"></i>
+                    <h1 id="CValue"></h1>
+                </div>
+                <div class="wind-direction">
+                    Wind Direction
+                    <i class="fa fa-compass"></i>
+                    <h1 id="WDValue"></h1>
+                </div>
+                <div class="pressure">
+                    Pressure
+                    <i class="fa-solid fa-volcano"></i>
+                    <h1 id="PValue"></h1>
+                </div>
+            </div>
+            <br>
+            <h2 class="heading">This Week</h2><br>
+            <div class="forecast">
+                <div class="day1">
+                    <h1 id="day1-name"></h1>
+                    <img id="day1-img" src="" alt="Weather Icon">
+                    <p id="day1-temp"></p>
+                </div>
+                <div class="day2">
+                    <h1 id="day2-name"></h1>
+                    <img id="day2-img" src="" alt="Weather Icon">
+                    <p id="day2-temp"></p>
+                </div>
+                <div class="day3">
+                    <h1 id="day3-name"></h1>
+                    <img id="day3-img" src="" alt="Weather Icon">
+                    <p id="day3-temp"></p>
+                </div>
+                <div class="day4">
+                    <h1 id="day4-name"></h1>
+                    <img id="day4-img" src="" alt="Weather Icon">
+                    <p id="day4-temp"></p>
+                </div>
+                <div class="day5">
+                    <h1 id="day5-name"></h1>
+                    <img id="day5-img" src="" alt="Weather Icon">
+                    <p id="day5-temp"></p>
+                </div>
+                <div class="day6">
+                    <h1 id="day6-name"></h1>
+                    <img id="day6-img" src="" alt="Weather Icon">
+                    <p id="day6-temp"></p>
+                </div>
+                <div class="day7">
+                    <h1 id="day7-name"></h1>
+                    <img id="day7-img" src="" alt="Weather Icon">
+                    <p id="day7-temp"></p>
+                </div>
+                <div class="day8">
+                    <h1 id="day8-name"></h1>
+                    <img id="day8-img" src="" alt="Weather Icon">
+                    <p id="day8-temp"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+const apiKey = "4931adcac229815b1907f0c3700bbeb9";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=";
+
+async function findUserLocation() {
+    fadeOutWeatherData(); // Trigger fade out before loading new data
+    const userLocation = document.getElementById('userLocation').value;
+    const response = await fetch(`${apiUrl}${userLocation}&appid=${apiKey}&units=metric`);
+    if (response.status == 404) {
+        document.querySelector(".error").classList.add("show");
+        return;
+    }
+    const data = await response.json();
+    setTimeout(() => {
+        updateWeatherData(data); // Update weather data after fade out completes
+        getForecast(data.coord.lat, data.coord.lon); 
+    }, 500); // Delay the update until after the fade out
+}
+
+function fadeOutWeatherData() {
+    // Fade out existing weather data
+    const weatherContainer = document.querySelector(".weather");
+    const highlightContainer = document.querySelector(".heighlight");
+    const forecastContainer = document.querySelector(".forecast");
+    
+    weatherContainer.style.animation = "fadeOut 0.5s forwards";
+    highlightContainer.style.animation = "fadeOut 0.5s forwards";
+    forecastContainer.style.animation = "fadeOut 0.5s forwards";
+
+    setTimeout(() => {
+        weatherContainer.style.display = "none";
+        highlightContainer.style.opacity = "0";
+        forecastContainer.style.opacity = "0";
+    }, 500); // Hide the weather container after fade out
+}
+
+async function getForecast(lat, lon) {
+    const forecastApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=metric&appid=${apiKey}`;
+    const response = await fetch(forecastApiUrl);
+    const data = await response.json();
+    updateForecast(data.daily); 
+}
+
+function updateWeatherData(data) {
+    // Show weather data after updating it
+    const weatherContainer = document.querySelector(".weather");
+    const highlightContainer = document.querySelector(".heighlight");
+    const forecastContainer = document.querySelector(".forecast");
+    
+    weatherContainer.style.display = "block";
+    weatherContainer.style.animation = "fadeIn 1s forwards";
+    highlightContainer.style.opacity = "1";
+    highlightContainer.style.animation = "fadeIn 1.5s forwards";
+    forecastContainer.style.opacity = "1";
+    forecastContainer.style.animation = "fadeIn 1.5s forwards";
+
+    document.querySelector(".city").innerHTML = data.name + ', ' + data.sys.country;
+    document.querySelector(".weather-icon").innerHTML = `<img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png" alt="Weather Icon">`;
+    document.querySelector(".temperature").innerHTML = Math.round(data.main.temp) + "°C";
+    document.querySelector(".feelslike").innerHTML = "Feels Like: " + Math.round(data.main.feels_like) + "°C";
+    document.querySelector(".description").innerHTML = `<i class="fa-brands fa-cloudversify"></i> ` + data.weather[0].description;
+    document.querySelector(".date").innerHTML = "Date: " + new Date(data.dt * 1000).toLocaleDateString();
+    document.getElementById("HValue").innerHTML = data.main.humidity + "%";
+    document.getElementById("WValue").innerHTML = Math.round(data.wind.speed) + " m/s";
+    document.getElementById("WDValue").innerHTML = data.wind.deg + "°";
+    document.getElementById("CValue").innerHTML = data.clouds.all + "%";
+    document.getElementById("PValue").innerHTML = data.main.pressure + " hPa";
+    document.getElementById("SRValue").innerHTML = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.getElementById("SSValue").innerHTML = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.querySelector(".weather").classList.add("show");
+}
+
+function updateForecast(forecastData) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    if (!forecastData || forecastData.length === 0) {
+        console.error('Forecast data is missing or empty.');
+        return;
+    }
+
+    const forecastLength = Math.min(forecastData.length, 8); // Ensure we don't exceed the available forecast data
+
+    for (let i = 0; i < forecastLength; i++) {  
+        const date = new Date(forecastData[i].dt * 1000);
+        const dayName = days[date.getDay()];
+
+        // Check if the elements exist before updating them
+        const dayNameElement = document.getElementById(`day${i + 1}-name`);
+        const dayImgElement = document.getElementById(`day${i + 1}-img`);
+        const dayTempElement = document.getElementById(`day${i + 1}-temp`);
+
+        if (dayNameElement && dayImgElement && dayTempElement) {
+            dayNameElement.textContent = dayName;
+            dayImgElement.src = `http://openweathermap.org/img/wn/${forecastData[i].weather[0].icon}@2x.png`;
+            dayTempElement.textContent = `Temp: ${Math.round(forecastData[i].temp.day)}°C`;
+        } else {
+            console.error(`Elements for day${i + 1} are not found in the DOM.`);
+        }
+    }
+
+    // Show the forecast section with animation
+    const forecastSection = document.querySelector(".forecast");
+    forecastSection.style.opacity = 1;
+    forecastSection.style.animation = "fadeIn 1.5s forwards";
+}
+
+    </script>
+</body>
+</html>

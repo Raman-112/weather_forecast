@@ -1,0 +1,677 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+* 
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins';
+    box-sizing: border-box;
+
+}
+body 
+{
+    height: auto;
+    width: auto;
+    background: linear-gradient(180deg, rgba(182, 211, 232, 0.532) 0%, rgb(173, 218, 238) 100%);
+}
+#matter {
+    height: 620px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .container {
+
+    position: relative;
+    height:490px;
+    width: 1200px ! important;
+    display: flex; 
+    justify-content: flex-start;
+    align-items: flex-start;
+  
+}
+
+.weather-input {
+    position: absolute; /* Keeps it in the normal flow */
+    width: 47%; /* Adjust width for the input section */
+    height: 489px;
+    background: linear-gradient(180deg, rgba(81, 182, 255, 1) 0%, rgb(173, 218, 238) 100%);
+    border-radius: 50px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1; /* Lower z-index to be below output if overlapping */
+    margin-right: 20px; /* Space between input and output */
+    animation: slideInLeft 1s forwards; /* Slide in from left */
+}
+
+.llb{
+    height: 100px;
+    width: 385px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+}
+.input-group {
+    display: flex; /* Enables flexbox layout */
+    justify-content: space-between; /* Adjusts spacing between children */
+    align-items: center; /* Aligns items vertically in the center */
+    border: 1px solid #ccc; /* Adds a border around the search box */
+    padding: 5px; /* Adds padding */
+    max-width: 70%; /* Set max width to be responsive */
+    border-radius: 50px;
+    background-color: #ffffff;
+    width: 100%; /* Takes full width */
+}
+
+
+.input-group input {
+    flex: 1; /* Makes the input take the remaining space */
+    border: none; /* Removes border for the input */
+    outline: none; /* Removes outline when focused */
+    padding: 10px 15px; /* Adds padding */
+    background-color: white;
+
+    font-size: 16px; /* Adjusted font size for better readability */
+    border-radius: 25px; /* Adjust border radius */
+    width:80%; /* Input takes full width */
+    box-sizing: border-box; /* Ensures padding does not affect the width */
+}
+
+.input-group i {
+    cursor: pointer; 
+    padding: 10px; 
+    border-radius: 50%;
+}
+
+.input-group .fa-search {
+    height: 40px;
+    width: 40px;
+    font-size: 22px;
+    color: #909090;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.input-group .fa-search:hover {
+    color: #000000;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 768px) {
+    .input-group {
+        flex-direction: column; /* Stack input and icon vertically */
+        align-items: stretch; /* Align items to fill the width */
+    }
+
+    .input-group input {
+        margin-bottom: 10px; /* Adds space between input and icon when stacked */
+    }
+
+    .input-group i {
+        margin: 0; /* Removes margin when stacked */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .input-group input {
+        font-size: 14px; /* Reduce font size on smaller screens */
+        padding: 8px 10px; /* Adjust padding */
+    }
+
+    .input-group .fa-search {
+        font-size: 18px; /* Adjust icon size */
+    }
+}
+
+
+/* Media Queries for Mobile Devices */
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center align items horizontally */
+        width: 100%; /* Full width for mobile */
+    }
+
+    .weather-input {
+        width: 90%; /* Adjust width for mobile */
+        height: auto; /* Adjust height dynamically */
+        margin-right: 0; /* Remove margin on mobile */
+        margin-bottom: 20px; /* Space between input and output */
+        position: static; /* Change position to static for stacking */
+    }
+
+    .weather-output {
+        width: 90%; /* Adjust width for mobile */
+        height: auto; /* Adjust height dynamically */
+        position: static; /* Change position to static for stacking */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .weather-input, .weather-output {
+        width: 100%; /* Full width for very small screens */
+    }
+
+    .input-group input {
+        font-size: 14px; /* Adjust font size on smaller screens */
+        padding: 8px 10px; /* Adjust padding */
+    }
+
+    .input-group .fa-search {
+        font-size: 18px; /* Adjust icon size */
+    }
+}
+
+
+
+
+
+
+
+
+
+.weather-output {
+    position: absolute; 
+    right: 20px;
+    width: 65%; 
+    height: 489px; /* Adjust height dynamically */
+    border-radius: 50px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 2; 
+    animation: slideInRight 1s forwards; 
+    padding: 20px; /* Add some padding for spacing */
+}
+
+.heading {
+    height: auto; /* Dynamic height */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.weather-icon {
+    height: 60px;
+    width: 100px;
+    text-align: center;
+    margin: 2rem auto;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+} 
+
+.weather-icon img {
+    width: 100px;
+    height: 100px;
+    margin-right: 40px;
+}
+
+
+.heighlight {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive grid layout */
+    gap: 20px;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards;
+    animation-delay: 0.8s;
+}
+
+
+
+
+.heighlight div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(81, 182, 255) !important;
+    border-radius: 20px;
+    padding: 10px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    height: 160px; /* Set a consistent height for all divs */
+}
+
+
+
+.heighlight div:hover {
+    transform: scale(1);
+}
+
+.heighlight i {
+    font-size: 45px;
+    margin-bottom: 10px; /* Space between icon and text */
+}
+
+.sun span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px; /* Space below each sun element */
+}
+
+.clouds {
+    display: flex;
+    align-items: center;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center;
+}
+
+.error.show {
+    display: block;
+    opacity: 1;
+}
+
+
+.weather.show 
+{
+    display: block;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.weather-input .feelslike, .weather-input .description, .weather-input .date, .weather-input .city 
+{
+    padding: 2px 20px;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 1.3s;
+    font-weight: 600;
+}
+.temperature 
+{
+    font-size: 5rem;
+    text-align: center;
+    display: flex;
+    padding-left: 8px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 1.5s;
+}
+
+
+/* Keyframes for animations */
+@keyframes slideInLeft 
+{
+    from 
+    {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to 
+    {   
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes slideInRight 
+{
+    from 
+    {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to 
+    {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes fadeIn 
+{
+    from 
+    {
+        opacity: 0;
+    }
+    to 
+    {
+        opacity: 1;
+    }
+}
+@keyframes fadeOut 
+{
+    from 
+    {
+        opacity: 1;
+    }
+    to 
+    {
+        opacity: 0;
+    }
+}
+
+
+
+@media only screen and (max-width: 452px) {
+
+    
+.container {
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
+    align-items: center;    /* Centers the elements horizontally */
+    height: 100%;
+    width: 100%;
+}
+
+.weather-output {
+    width: 90%; /* Adjust width to fit within the container */
+    height: 40%; /* Adjust height as needed */
+    border-radius: 50px;
+    background-color: aquamarine;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px; /* Space between output and input */
+}
+
+.weather-input {
+    width: 90%; /* Adjust width to fit within the container */
+    height: 50%; /* Adjust height as needed */
+    background: linear-gradient(180deg, rgba(81, 182, 255, 1) 0%, rgb(173, 218, 238) 100%);
+    border-radius: 50px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+.container-fluid {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar.navbar-expand-lg.bg-body-tertiary {
+    height: 80px;
+    width: 100%;
+    position: sticky;
+    background-color: rgba(155, 211, 231, 0.23) !important;
+    border-bottom: 2px solid rgba(47, 85, 173, 0.786) !important;
+}
+
+
+#logo1 {
+    height: 60px;
+    width: auto;
+    background-image: url(Screenshot_2024-09-03_114017-removebg-preview.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 2;
+}
+
+.goit {
+    height: 62px;
+    width: 250px;
+}
+
+.nav-link.active {
+    color: rgb(14, 12, 72)!important;
+
+}
+
+.nav-link {
+    color:rgb(14, 12, 72)!important;
+    font-weight: 500;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px !important;
+    text-align: center;
+    font-weight: 500!important;
+    margin-right: 50px;
+}
+
+#me{
+    height: auto;
+    width: 200px;
+}
+
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+.btn.btn-outline-success {
+    height: 35px;
+    font-size: 13px !important;
+    border: 1px solid rgb(95, 147, 216) !important;
+    color: rgb(255, 255, 255) !important;
+    background-color: rgba(49, 60, 214, 0.918);
+    padding-right: 10px;
+    font-weight: 800;
+}
+
+.btn.btn-outline-success:hover {
+    background-color: rgba(24, 11, 92, 0.856)!important;
+    border:2px solid rgb(95, 147, 216) !important;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 992px) {
+
+    .navbar.navbar.navbar-expand-lg.bg-body-tertiary{
+        height: 0% !important; 
+        padding-left: 0% !important; 
+        z-index: 1; 
+    }
+    #logo1{
+        display: block ;
+        margin-left: auto ;
+        margin-right: auto;
+        height: 65px;
+        width: auto;
+ 
+    }
+    .goit{
+        display: block ;
+        margin-left: auto ;
+        margin-right: auto;
+  
+    }
+    
+    #qaz{
+        font-size: 11px;
+    }    
+}
+
+
+.nav-link:hover{
+    text-decoration: rgba(173, 47, 47, 0.786) solid underline;
+    color: rgb(50, 1, 1);
+}
+.keep{
+    height: auto;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
+}
+
+
+.ni0{
+    text-decoration: none;
+    color: white;
+    line-height: 0px;
+}
+.ni0:hover{
+    color: rgba(255, 217, 0, 0.749);
+    text-decoration: underline;
+}
+.bolder{
+    text-decoration: underline;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.help{
+    color: white;
+    margin: 40px;
+    }
+    #qaz{
+        height: auto;
+        width: auto;
+        display: flex;
+  background-color:rgb(5, 0, 57);
+        justify-content: center;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        z-index: -1;
+    }
+#jin{
+    height: 60px;
+    width: auto;
+    background-color: rgb(8, 5, 40);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.ki{
+    text-decoration: none;
+    font-size: 13px;
+    color: white;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-left: 20px;
+}
+.ki:hover{
+    color: rgba(255, 217, 0, 0.749);
+    text-decoration: underline;
+}
+
+.whitee{
+    height: 1px;
+    width: auto;
+    background-color: white;
+}
+
+#jin2{
+    height: auto;
+    width: auto;
+    background-color: rgb(4, 1, 30);
+    color: white;
+    text-align: center;
+}
+
+
+.fol{
+    height: auto;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+}
+#cd{
+    height: 40px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    border: 2px solid brown;
+    background-color: hsla(0, 100%, 50%, 0.673);
+    text-decoration: none;
+    color: #ffffff;
+}
+.ko{
+    height: 40px;
+    width: auto;
+    background-color: #f5e400;
+    display: flex;
+    justify-content: center;
+    border: 2px solid brown;
+}
+
+
+
+
+
+
+
+#sky {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: background-color 5s ease;
+}
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+#info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    text-shadow: 1px 1px 2px rgb(2, 0, 24);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

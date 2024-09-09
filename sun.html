@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise and Sunset Circular Path</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%
+            
+            ;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #sky {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+        }
+        #sun {
+            width: 50px;
+            height: 50px;
+            background: #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 30px #FF8C00;
+        }
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+        }
+        #orbit {
+            position: absolute;
+            width: 300px; /* Diameter of the circular path */
+            height: 300px; /* Diameter of the circular path */
+            border: 2px dashed rgba(0, 0, 0, 0.3); /* Circular path styling */
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* Prevent interaction */
+        }
+    </style>
+</head>
+<body>
+<div id="sky">
+    <div id="orbit"></div> <!-- Circular path -->
+    <div id="sun"></div>
+    <div id="info"></div>
+</div>
+<script>
+    const sun = document.getElementById('sun');
+    const info = document.getElementById('info');
+
+    // Set sunrise and sunset times (in 24-hour format)
+    const sunrise = 6; // 6:00 AM
+    const sunset = 18; // 6:00 PM
+
+    function updateSunPosition() {
+        const now = new Date();
+        const hours = now.getHours() + now.getMinutes() / 60;
+
+        // Calculate the progress of the day
+        let progress = (hours - sunrise) / (sunset - sunrise);
+        progress = Math.max(0, Math.min(1, progress)); // Clamp between 0 and 1
+
+        // Calculate the sun's position on a circular path
+        const radius = 150; // Radius of the circle (half of the orbit diameter)
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        // Use sine and cosine to calculate the sun's x and y positions
+        const angle = progress * Math.PI; // Half circle (180 degrees)
+        const sunLeft = centerX + radius * Math.cos(angle) - 25; // Adjust for sun size
+        const sunTop = centerY - radius * Math.sin(angle) - 25; // Adjust for sun size
+
+        // Update the sun's position
+        sun.style.left = `${sunLeft}px`;
+        sun.style.top = `${sunTop}px`;
+
+        // Update info text
+        const timeString = now.toLocaleTimeString();
+        info.textContent = `Current time: ${timeString}`;
+
+        requestAnimationFrame(updateSunPosition);
+    }
+
+    // Start the animation
+    updateSunPosition();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+.heading{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #333;
+}
+.weather-icon 
+{
+    height: 60px;
+    width:100px;
+    text-align: center;
+    margin: 2rem auto;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+} 
+.weather-icon img 
+{
+    width: 100px;
+    height: 100px;
+}
+.heighlight .img{
+    font-size: 1px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    margin-top: 10px;
+}
+.error.show 
+{
+    display: block;
+    opacity: 1;
+}
+
+.container .heighlight 
+{
+    display: grid;
+    grid-template-columns: repeat(3,190px);
+    grid-auto-flow: row;
+    row-gap: 10px;
+    column-gap: 10px;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards;
+    animation-delay: 0.8s;
+
+}
+
+.heighlight div
+{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(81, 182, 255);
+    border-radius: 20px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+.heighlight div:hover
+{
+    transform: scale(1);
+}
+.heighlight i 
+{
+    font-size: 45px;
+}
+
+.sun span 
+{
+    height: 60px!important;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.clouds{
+    height: 120px!important;
+    align-items: center;
+    display: flex;
+
+}
+
+
+
+
+
+
+.weather-output {
+    position: absolute; 
+    right: 20px; /* Aligns output to the right side */
+    width:65%; /* Adjust width for the output section */
+    height: 469px; /* Adjust height as needed */
+    border-radius: 50px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 2; /* Higher z-index to be on top */
+    animation: slideInRight 1s forwards; 
+}

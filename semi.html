@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise and Sunset Circular Path with Moon and Stars</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Background for night */
+        }
+        #sky {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #sun, #moon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        #sun {
+            background: #FFD700;
+            box-shadow: 0 0 30px #FF8C00;
+        }
+        #moon {
+            background: #FFF;
+            box-shadow: 0 0 15px #AAAAAA;
+            display: none; /* Hidden by default */
+        }
+        .star {
+            width: 5px;
+            height: 5px;
+            background: #FFF;
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #FFF;
+            display: none; /* Hidden by default */
+        }
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #FFF;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        #orbit {
+            position: absolute;
+            width: 100%; /* Diameter of the circular path */
+            height: 50%; /* Half of the window height */
+            border: 2px dashed rgba(255, 255, 255, 0.3); /* Circular path styling */
+            border-radius: 50%;
+            top: 50%;
+            left: 0;
+            transform: translate(0, -50%);
+            pointer-events: none; /* Prevent interaction */
+        }
+    </style>
+</head>
+<body>
+<div id="sky">
+    <div id="orbit"></div> <!-- Circular path -->
+    <div id="sun"></div>
+    <div id="moon"></div>
+    <!-- Adding stars -->
+    <div class="star" style="top: 10%; left: 20%;"></div>
+    <div class="star" style="top: 15%; left: 80%;"></div>
+    <div class="star" style="top: 25%; left: 50%;"></div>
+    <div class="star" style="top: 40%; left: 30%;"></div>
+    <div id="info"></div>
+</div>
+<script>
+    const sun = document.getElementById('sun');
+    const moon = document.getElementById('moon');
+    const stars = document.querySelectorAll('.star');
+    const info = document.getElementById('info');
+
+    // Set sunrise and sunset times (in 24-hour format)
+    const sunrise = 6; // 6:00 AM
+    const sunset = 18; // 6:00 PM
+
+    function updateSkyElementsVisibility(isDaytime) {
+        sun.style.display = isDaytime ? 'block' : 'none';
+        moon.style.display = isDaytime ? 'none' : 'block';
+        stars.forEach(star => {
+            star.style.display = isDaytime ? 'none' : 'block';
+        });
+    }
+
+    function updateSunAndMoonPosition() {
+        const now = new Date();
+        const hours = now.getHours() + now.getMinutes() / 60;
+
+        // Calculate if it is day or night
+        const isDaytime = hours >= sunrise && hours <= sunset;
+        updateSkyElementsVisibility(isDaytime);
+
+        const orbitHeight = window.innerHeight / 2; // Height of the semi-circle (orbit)
+        const orbitWidth = window.innerWidth; // Full width of the screen
+        const radius = orbitHeight; // Radius of the semi-circle
+        const centerX = orbitWidth / 2; // Center x of the semi-circle path
+        const centerY = window.innerHeight; // Center y of the semi-circle path
+
+        if (isDaytime) {
+            // Calculate sun's progress in the day
+            let progress = (hours - sunrise) / (sunset - sunrise);
+            progress = Math.max(0, Math.min(1, progress)); // Clamp between 0 and 1
+
+            // Use sine and cosine to calculate the sun's x and y positions on a semi-circle path
+            const angle = progress * Math.PI; // 180 degrees (semi-circle)
+            const sunLeft = centerX + radius * Math.cos(angle) - 25; // Adjust for sun size
+            const sunTop = centerY - radius * Math.sin(angle) - 25; // Adjust for sun size
+
+            // Update the sun's position
+            sun.style.left = `${sunLeft}px`;
+            sun.style.top = `${sunTop}px`;
+        } else {
+            // Calculate moon position (opposite of the sun)
+            const progress = ((hours >= sunset ? hours - sunset : hours + 24 - sunset) / (24 - sunset + sunrise)) % 1;
+            const angle = Math.PI + progress * Math.PI; // Opposite half circle (180 degrees)
+            const moonLeft = centerX + radius * Math.cos(angle) - 25; // Adjust for moon size
+            const moonTop = centerY - radius * Math.sin(angle) - 25; // Adjust for moon size
+
+            // Update the moon's position
+            moon.style.left = `${moonLeft}px`;
+            moon.style.top = `${moonTop}px`;
+        }
+
+        // Update info text
+        const timeString = now.toLocaleTimeString();
+        info.textContent = `Current time: ${timeString}`;
+
+        requestAnimationFrame(updateSunAndMoonPosition);
+    }
+
+    // Start the animation
+    updateSunAndMoonPosition();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<footer id="qaz">
+    <div class="help">
+        <dl class="bolder">About Us</dl>
+        <dl></dl>
+        <dl><a class="ni0" href="#">Our Heritage</a></dl>
+        <dl><a class="ni0" href="#">Overview</a></dl>
+        <dl><a class="ni0" href="#">Coffeehouse</a></dl>
+        <dl><a class="ni0" href="#">Our Company</a></dl>
+        <dl><a class="ni0" href="#">Leadership Team</a></dl>
+        <dl><a class="ni0" href="#">Accessibility</a></dl>
+        <dl><a class="ni0" href="#">Franchising info</a></dl>
+        <dl><a class="ni0" href="#">News and Notifications</a></dl>
+        </div>
+    <div class="help">
+    <dl class="bolder">Responsibility</dl>
+    <dl></dl>
+    <dl><a class="ni0" href="#">Diversity</a></dl>
+    <dl><a class="ni0" href="#">Community</a></dl>
+    <dl><a class="ni0" href="#"></a>Ethical Sourcing</dl>
+    <dl><a class="ni0" href="#">Environment Stewardship</a></dl>
+    <dl><a class="ni0" href="#">Scholarships for students</a></dl>
+    <dl><a class="ni0" href="#"></a>Donations and Charities</dl>
+    <dl><a class="ni0" href="#">Cafecal's Offices</a></dl>
+    <dl><a class="ni0" href="#"></a>CafeCal's International</dl>
+    <dl><a class="ni0" href="#">Adver
+        tisements</a></dl>
+    <dl><a class="ni0" href="#">Learn More</a></dl>
+    </div>
+  
+    <div class="help">
+      <dl class="bolder">Quick Links</dl>
+      <dl></dl>
+      <dl><a class="ni0" href="#">Privacy Policy</a></dl>
+      <dl><a class="ni0" href="#">FAQs</a></dl>
+      <dl><a class="ni0" href="#">Customer Service</a></dl>
+      <dl><a class="ni0" href="#">CafeCal's India Mobile App</a></dl>
+      <dl><a class="ni0" href="#">Delivery</a></dl>
+      <dl><a class="ni0" href="#">Beverage Subscription</a></dl>
+      <dl><a class="ni0" href="#">Offers & Discounts</a></dl>
+      <dl><a class="ni0" href="#">Terms os Use</a></dl>
+      </div>
+    
+    <div class="help">
+    <dl class="bolder">Connect With Us</dl>
+    <dl></dl>
+    <dl><a class="ni0" href="#">Instragram</a></dl>
+    <dl><a class="ni0" href="#">Facebook</a></dl>
+    <dl><a class="ni0" href="#">Youtube</a></dl>
+    <dl><a class="ni0" href="#">Twitter</a></dl>
+    <dl><a class="ni0" href="#">Telegram</a></dl>
+    <dl><a class="ni0" href="#">Linkdin</a></dl>
+    <dl><a class="ni0" href="#">Threads</a></dl>
+    <dl><a class="ni0" href="#">Website</a></dl>
+    </div>
+  </footer>
+  <div class="whitee"></div>
+  <footer>
+  <div id="jin">
+    
+    <dl><a class="ki" href="#">Web Accessibility</a></dl>
+  
+      <dl><a class="ki"  href="#">Privacy Statement</a></dl>
+   
+      <dl><a  class="ki" href="#">Terms of Use</a></dl>
+  
+      <dl><a  class="ki" href="contactme.html">Contact us</a></dl>
+  </div>
+  </footer>
+  <div class="whitee"></div>
+  <footer id="jin2">
+    Made with  &hearts;  by   Tempestas's- Weather Forecasting Website<br>
+    &#169; Tempestas 2024, Weather.com, Affiliates copyright of their respective owners.
+</footer>
